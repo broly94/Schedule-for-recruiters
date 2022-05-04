@@ -1,4 +1,5 @@
 import app from './app.js';
+import './db.js';
 
 //Set port
 app.set('port', process.env.PORT);

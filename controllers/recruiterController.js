@@ -1,7 +1,9 @@
-const recuiterCtrl = {}
+class recuiterController{
 
-recuiterCtrl.saludo = (req, res) => {
-    res.send("Hola mundo desde el controlador");
+    postRecuiter(req,res){
+        res.send("Hola desde el controlador");
+    }
+
 }
 
-export default recuiterCtrl;
+export const RecuiterController = new recuiterController;

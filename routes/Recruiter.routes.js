@@ -1,8 +1,7 @@
 import { Router } from "express";
 export const router = Router();
-import  recuiterCtrl  from '../controllers/recruiterController.js';
-const { saludo } = recuiterCtrl;
-
+import  {RecuiterController} from '../controllers/recruiterController.js';
+const { postRecuiter } = RecuiterController;
 router
     .route('/')
-    .get(saludo)
+    .get(postRecuiter)
