@@ -1,15 +1,17 @@
-import Sequelize from 'sequelize';
+import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize('schedule', 'root', 'root', {
-    dialect: 'mysql',
-    dialectOptions: {
-        // Your mysql2 options here
-    }
+    host: 'localhost',
+    dialect: 'mysql'
 })
 
+
 if(!sequelize){
-    throw Error;
+    console.log("error")
+    throw new Error;
     
 }else {
-    console.log("Funciona");
+    console.log("Db is connected");
 }
+
+export default sequelize;
