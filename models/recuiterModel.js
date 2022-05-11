@@ -21,13 +21,13 @@ const recruiterSchema = sequelize.define('recruiters', {
     },
     email: {
         type: DataTypes.STRING,
-        unique: true,
+        notEmpty: true,
+        notNull: true,
+        allowNull: false,
         validate: {
-            isEmail: true,
-            notEmpty:true,
-            notNull: true
+            isEmail: true
         },
-        allowNull: false
+        unique: true
     },
     password: {
         type: DataTypes.STRING,
