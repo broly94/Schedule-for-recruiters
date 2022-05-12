@@ -1,8 +1,4 @@
-function messageError (action, it, event) {
-
-    this.action = action;
-    this.it = it;
-    this.event = event;
+const messageError = () => {
 
     const catchError = (action, it, event) =>{
         console.log(`Error ${action} ${it}`, event);

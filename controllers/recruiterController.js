@@ -1,9 +1,9 @@
 //Schema model recruiter
 import recruiterSchema from '../models/recuiterModel.js';
-import { emailUnique } from '../helpers/recruiter/emailUnique.js';
+import { emailUnique, getEmail } from '../helpers/recruiter/validationEmail.js';
 //Message Errors
 import messageError from '../helpers/recruiter//messageError.js';
-const construct = new messageError();
+
 //Bcrypt
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
@@ -18,45 +18,40 @@ const getRecruiters = async (req, res) => {
             data: recruiter
         })
     } catch (e) {
-        construct.catchError('getting', 'recruiter', e.message);
+       messageError().catchError('getting', 'recruiter', e.message);
     }
 }
 
 const getRecruiter = async (req, res) => {
     try {
-
         const id = req.params.id;
         const recruiter = await recruiterSchema.findAll({
             where: {
                 id
             }
         });
-
         if (recruiter.length == 0) res.status(400).json({ error: true, message: 'Error, cloud not get the recruiter' });
         res.status(200).json({
             error: false,
             data: recruiter
         })
-
     } catch (e) {
-        construct.catchError('getting', 'recruiter', e.message);
+        messageError().catchError('getting', 'recruiter', e.message);
     }
 }
 
 const postRecruiter = async (req, res) => {
     try {
         const { name, last_name, email, password } = req.body
-
+        //Hash password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
-
-        const validatorEmail = await emailUnique(req, res);
-        
-        if(validatorEmail.length === 1) return res.status(400).json({
+        //Validation email
+        const validationEmail = await emailUnique(req, res);
+        if (validationEmail.length === 1) return res.status(400).json({
             error: true,
             message: 'Error, there is already a recruiter in database'
         })
-
         const recruiter = await recruiterSchema.create({
             name,
             last_name,
@@ -70,26 +65,19 @@ const postRecruiter = async (req, res) => {
             data: recruiter
         })
     } catch (e) {
-        construct.catchError('saved', 'recruiter', e.message);
+        messageError().catchError('saved', 'recruiter', e.message);
     }
 }
 
 const putRecruiter = async (req, res) => {
     try {
-        
         const id = req.params.id;
-        const { name, last_name, email, password } = req.body;
-        
+        const { name, last_name, password } = req.body;
+        //get Email
+        const { email } = await getEmail(req);
+        //Hash password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
-        
-        const validatorEmail = await emailUnique(req);
-
-        if(validatorEmail.length === 1) return res.status(400).json({
-            error: true,
-            message: 'Error, there is already a recruiter in database'
-        })
-
         const response = await recruiterSchema.update({
             name,
             last_name,
@@ -100,15 +88,13 @@ const putRecruiter = async (req, res) => {
                 id
             }
         })
-
-        if (response === 0) return res.status(400).json({ error: true, message: "Error, could not updated recruiter" });
+        if (response === 0) return res.status(404).json({ error: true, message: "Error, could not updated recruiter" });
         return res.json({
             error: false,
             message: 'Updated recruiter'
         })
-
     } catch (e) {
-        construct.catchError('updated', 'recruiter', e);
+        messageError().catchError('updated', 'recruiter', e);
     }
 }
 
@@ -126,7 +112,7 @@ const deleteRecruiter = async (req, res) => {
             message: "Deleted recruiter"
         })
     } catch (e) {
-        construct.catchError('deleted', 'recruiter', e.message);
+        messageError().catchError('deleted', 'recruiter', e.message);
     }
 }
 
