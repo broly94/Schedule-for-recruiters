@@ -1,8 +1,9 @@
-import recruiterSchema from "../models/recuiterModel";
+import recruiterSchema from "../models/recuiterModel.js";
 import bcrypt from 'bcrypt';
 import messaeError from '../helpers/recruiter/messageError.js'
+import jwt from 'jsonwebtoken';
 
-const login = (req, res) => {
+const login = async (req, res) => {
 
     try {
 
@@ -14,18 +15,36 @@ const login = (req, res) => {
             }
         });
 
-        if(!recruiter) res.status(400).json({ error: true, message: 'Error, this recruiter doest not exist'});
+        if(recruiter.length === 0) res.status(404).json({ error: true, message: 'Error, this recruiter doest not exist'});
 
-        console.log(recruiter);
+        const data = recruiter.map(e => {
+            return {
+                email: e.email,
+                password: e.password
+            }
+        });
+        const [dataRecruiter] = data;
 
-        //const validPassword = await bcrypt.compare(password, recruiter.password);
+        
+        const validationPassword = await bcrypt.compare(password, dataRecruiter.password);
+        if(!validationPassword) res.status(404).json({error: true, message: "Error, do you not can not get into"})
 
-    } catch (error) {
-        const construct = new messaeError();
-        construct.catchError('login', 'recruiter', error);
+        const token = jwt.sign({
+            email: dataRecruiter.email,
+            password: dataRecruiter.password
+        }, process.env.TOKEN_SECRET)
+
+        res.header('auth-token', token)
+        
+        res.status(200).json({
+            error: false,
+            message: "Welcome",
+            data: token
+        })
+
+    } catch (e) {
+        messaeError().catchError('login', 'recruiter', e)
     }
-
-
 }
 
 export {

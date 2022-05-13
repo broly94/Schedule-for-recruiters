@@ -1,6 +1,6 @@
 const messageError = () => {
 
-    const catchError = (action, it, event) =>{
+    const catchError = (action, it, event) => {
         console.log(`Error ${action} ${it}`, event);
     }
 
