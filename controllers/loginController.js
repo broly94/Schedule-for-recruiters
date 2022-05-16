@@ -1,6 +1,6 @@
 import recruiterSchema from "../models/recuiterModel.js";
-import bcrypt from 'bcrypt';
 import messaeError from '../helpers/recruiter/messageError.js'
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const login = async (req, res) => {
@@ -23,23 +23,23 @@ const login = async (req, res) => {
                 password: e.password
             }
         });
+
         const [dataRecruiter] = data;
 
-        
-        const validationPassword = await bcrypt.compare(password, dataRecruiter.password);
+        const validationPassword = bcrypt.compareSync(password, dataRecruiter.password);
         if(!validationPassword) res.status(404).json({error: true, message: "Error, do you not can not get into"})
 
         const token = jwt.sign({
             email: dataRecruiter.email,
             password: dataRecruiter.password
-        }, process.env.TOKEN_SECRET)
+        }, process.env.TOKEN_SECRET, {expiresIn: 60 * 60})
 
-        res.header('auth-token', token)
-        
+        res.header('token', token)
+
         res.status(200).json({
             error: false,
             message: "Welcome",
-            data: token
+            token
         })
 
     } catch (e) {
