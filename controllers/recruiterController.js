@@ -8,17 +8,19 @@ import messageError from '../helpers/recruiter//messageError.js';
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
-
 const getRecruiters = async (req, res) => {
     try {
-        const recruiter = await recruiterSchema.findAll();
-        if (recruiter.length === 0) res.status(400).json({ error: true, message: 'Error, could not get recruiters' })
+        const recruiters = await recruiterSchema.findAll();
+        if (recruiters.length === 0) res.status(400).json({ error: true, message: 'Error, could not get recruiters' })
+        const { email } = req.user;
         res.status(200).json({
             error: false,
-            data: recruiter
+            userLogin: email,
+            recruiters
         })
     } catch (e) {
-       messageError().catchError('getting', 'recruiter', e.message);
+        res.status(401).json({ error: true, message: 'Error catch capture' })
+        messageError().catchError('getting', 'recruiter', e.message);
     }
 }
 
@@ -27,15 +29,20 @@ const getRecruiter = async (req, res) => {
         const id = req.params.id;
         const recruiter = await recruiterSchema.findAll({
             where: {
-                id
+                id_recruiter: id
             }
         });
         if (recruiter.length == 0) res.status(400).json({ error: true, message: 'Error, cloud not get the recruiter' });
+
+        const { email } = req.user;
+        
         res.status(200).json({
             error: false,
+            userLogin: email,
             data: recruiter
         })
     } catch (e) {
+        res.status(401).json({ error: true, message: 'Error catch capture' })
         messageError().catchError('getting', 'recruiter', e.message);
     }
 }
@@ -58,13 +65,15 @@ const postRecruiter = async (req, res) => {
             email,
             password: hash
         });
-        if (recruiter.length === 0) res.status(400).json({ error: true, message: 'Error, could is not created recruiter' })
+        if (recruiter.length === 0) res.status(400).json({ error: true, message: 'Error, could is not created recruiter' });
+
         res.status(200).json({
             error: false,
             message: "Recruiter created",
             data: recruiter
         })
     } catch (e) {
+        res.status(401).json({ error: true, message: 'Error catch capture' })
         messageError().catchError('saved', 'recruiter', e.message);
     }
 }
@@ -85,15 +94,20 @@ const putRecruiter = async (req, res) => {
             password: hash
         }, {
             where: {
-                id
+                id_recruiter: id
             }
         })
         if (response === 0) return res.status(404).json({ error: true, message: "Error, could not updated recruiter" });
+
+        const userLogin = req.user;
+
         return res.json({
             error: false,
+            userLogin: userLogin.email,
             message: 'Updated recruiter'
         })
     } catch (e) {
+        res.status(401).json({ error: true, message: 'Error catch capture' })
         messageError().catchError('updated', 'recruiter', e);
     }
 }
@@ -103,15 +117,20 @@ const deleteRecruiter = async (req, res) => {
         const id = req.params.id;
         const response = await recruiterSchema.destroy({
             where: {
-                id
+                id_recruiter: id
             }
         })
         if (response === 0) return res.status(400).json({ error: true, message: "Error, could not deleted recruiter" });
+
+        const { email } = req.user;
+
         return res.json({
             error: false,
+            userLogin: email,
             message: "Deleted recruiter"
         })
     } catch (e) {
+        res.status(401).json({ error: true, message: 'Error catch capture' })
         messageError().catchError('deleted', 'recruiter', e.message);
     }
 }

@@ -15,7 +15,7 @@ const login = async (req, res) => {
             }
         });
 
-        if(recruiter.length === 0) res.status(404).json({ error: true, message: 'Error, this recruiter doest not exist'});
+        if (recruiter.length === 0) res.status(404).json({ error: true, message: 'Error, this recruiter doest not exist' });
 
         const data = recruiter.map(e => {
             return {
@@ -27,12 +27,12 @@ const login = async (req, res) => {
         const [dataRecruiter] = data;
 
         const validationPassword = bcrypt.compareSync(password, dataRecruiter.password);
-        if(!validationPassword) res.status(404).json({error: true, message: "Error, do you not can not get into"})
+        if (!validationPassword) res.status(404).json({ error: true, message: "Error, do you not can not get into" })
 
         const token = jwt.sign({
             email: dataRecruiter.email,
             password: dataRecruiter.password
-        }, process.env.TOKEN_SECRET, {expiresIn: 60 * 60})
+        }, process.env.TOKEN_SECRET, { expiresIn: 60 * 60 })
 
         res.header('token', token)
 

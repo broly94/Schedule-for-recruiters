@@ -12,9 +12,9 @@ router
     
 router
     .route('/:id')
-    .get(getRecruiter)
-    .put(putRecruiter)
-    .delete(deleteRecruiter)
+    .get(verifyToken, getRecruiter)
+    .put(verifyToken, putRecruiter)
+    .delete(verifyToken, deleteRecruiter)
 
 export {
     router as recruiterRoutes
