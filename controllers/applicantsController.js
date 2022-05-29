@@ -1,14 +1,15 @@
 import messageError from '../helpers/recruiter/messageError.js';
 import applicantsSchema from '../models/applicantsModel.js';
+import applicantsTechnologiesSchema from '../models/applicantsTechnoligiesModel.js';
 import levelEnglishesSchema from '../models/levelEnglishesModel.js';
 import senioritiesSchema from '../models/senioritiesModel.js';
 import socialMediaSchema from '../models/socialMediaModel.js';
-//import technologiesSchema from '../models/technologiesModel.js';
+import technologiesSchema from '../models/technologiesModel.js';
+
 
 const postApplicants = async (req, res) => {
 
-    try {
-
+     try {
         const {
             name,
             last_name,
@@ -19,10 +20,9 @@ const postApplicants = async (req, res) => {
             image,
             level_englishes_id,
             seniorities_id,
-            technologies_id,
-            social_media
+            social_media,
+            technologies
         } = req.body
-
 
         const newApplicant = await applicantsSchema.create({
             name,
@@ -34,12 +34,19 @@ const postApplicants = async (req, res) => {
             image,
             level_englishes_id,
             seniorities_id,
-            technologies_id
+            
         })
+        
+        let { id } = newApplicant;
+            
 
+        for (let i = 0; i < technologies.length; i++) {
+            const tec = await technologiesSchema.findByPk(technologies[i]);
+            newApplicant.addTechnologies(tec, {through: applicantsTechnologiesSchema});
+        }
+        
+        
         const { facebook, instagram, linkedin } = social_media;
-
-        const { id } = newApplicant;
 
         await socialMediaSchema.create({
             id_postulant: id,
@@ -63,8 +70,6 @@ const postApplicants = async (req, res) => {
 const getAtpplicants = async (req, res) => {
     try {
 
-        //console.log(senioritiesSchema)
-
         const applicants = await applicantsSchema.findAll({
             include: [
                 {
@@ -75,6 +80,9 @@ const getAtpplicants = async (req, res) => {
                 },
                 {
                     model: levelEnglishesSchema
+                },
+                {
+                    model: technologiesSchema
                 }
             ]
         });

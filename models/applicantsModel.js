@@ -69,15 +69,6 @@ const applicantsSchema = sequelize.define('applicants', {
             notNull: true,
             notEmpty: true
         }
-    },
-    technologies_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            isInt: true,
-            notNull: true,
-            notEmpty: true
-        }
     }
 },
     {
