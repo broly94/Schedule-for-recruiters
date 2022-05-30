@@ -8,8 +8,5 @@ import technologiesSchema from "./technologiesModel.js";
 applicantsSchema.hasOne(socialMediaSchema, { foreignKey: 'id_postulant' });
 applicantsSchema.belongsTo(levelEnglishesSchema, { foreignKey: 'level_englishes_id' });
 applicantsSchema.belongsTo(senioritiesSchema, { foreignKey: 'seniorities_id' }); 
-
-
 applicantsSchema.belongsToMany(technologiesSchema, { through: 'applicantstechnologies' });
-
-//technologiesSchema.hasMany(applicantsSchema, { foreignKey: 'applicantstechnologies' });
+technologiesSchema.belongsToMany(applicantsSchema, { through: 'applicantstechnologies' });

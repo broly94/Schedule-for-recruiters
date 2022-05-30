@@ -8,7 +8,7 @@ const technologiesSchema = sequelize.define('technologies', {
         primaryKey: true,
         autoIncrement: true
     },
-    technologies: {
+    technology: {
         type: DataTypes.STRING
     }
 

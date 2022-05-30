@@ -6,7 +6,7 @@ import './models/indexModels.js';
 //Import Routes
 import { recruiterRoutes } from './routes/Recruiter.routes.js';
 import { loginRoutes } from './routes/Login.routes.js';
-import { applicantsRoutes } from './routes/applicants.routes.js';
+import { applicantsRoutes } from './routes/Applicants.routes.js';
 
 //Config App
 const app = express();
