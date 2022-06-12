@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize('schedule_v2', 'root', 'root', {
-    host: 'localhost',
+    host: process.env.HOST,
     dialect: 'mysql'
 })
 

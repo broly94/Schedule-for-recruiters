@@ -11,7 +11,7 @@ const saltRounds = 10;
 const getRecruiters = async (req, res) => {
     try {
         const recruiters = await recruiterSchema.findAll();
-        if (recruiters.length === 0) res.status(400).json({ error: true, message: 'Error, could not get recruiters' })
+        if (recruiters.length === 0) res.status(404).json({ error: true, message: 'Error, could not get recruiters' })
         const { email } = req.user;
         res.status(200).json({
             error: false,

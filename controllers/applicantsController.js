@@ -71,20 +71,23 @@ const getAtpplicant = async (req, res) => {
                 }
             ]
         });
-        if(applicant.length === 0){ return res.status(404).json({error: true, message: 'Error not exist this Applicant in the database'})}
+        if (applicant.length === 0) { return res.status(404).json({ error: true, message: 'Error not exist this Applicant in the database' }) }
         res.json({
             error: false,
             applicant
         })
     } catch (e) {
-        messageError.catchError('Get', 'applicant', e)
+        res.json({
+            error: true,
+            message: 'Catch Error'
+        })
+        messageError().catchError('Get', 'applicant', e)
     }
 }
 
 const putApplicant = async (req, res) => {
     try {
         const { id } = req.params;
-
         const {
             name,
             last_name,
@@ -116,13 +119,13 @@ const putApplicant = async (req, res) => {
                 }
             }
         );
-        
+
         //Update technologies
         const applicantId = await applicantsSchema.findByPk(id);
-        applicantId.setTechnologies([], {through: applicantsTechnologiesSchema});
+        applicantId.setTechnologies([], { through: applicantsTechnologiesSchema });
         for (let i = 0; i < technologies.length; i++) {
             const tec = await technologiesSchema.findByPk(technologies[i]);
-            applicantId.addTechnologies(tec, {through: applicantsTechnologiesSchema}); 
+            applicantId.addTechnologies(tec, { through: applicantsTechnologiesSchema });
         }
 
         //Update social media
@@ -136,14 +139,14 @@ const putApplicant = async (req, res) => {
                 }
             }
         );
-        
-        if(applicant.length === 0) {return res.status(404).json({error: true, message: 'Error at updating the applicant'})}
-        res.json({
+
+        if (applicant.length === 0) { return res.status(404).json({ error: true, message: 'Error at updating the applicant' }) }
+        res.status(200).json({
             erorr: false,
             message: 'Applicant updating correctly'
         });
     } catch (e) {
-        res.json({error: true, message: 'Catch Error'});
+        res.json({ error: true, message: 'Catch Error' });
         messageError().catchError('Put', 'Applicant', e);
     }
 }
@@ -192,7 +195,7 @@ const postApplicants = async (req, res) => {
             linkedin
         })
 
-        res.json({
+        res.status(200).json({
             message: 'Postulant created',
             newApplicant
         });
@@ -202,9 +205,46 @@ const postApplicants = async (req, res) => {
     }
 }
 
+const deleteApplicant = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        //Deleted technologies
+        const applicantId = await applicantsSchema.findByPk(id);
+
+        applicantId.removeTechnologies({ through: applicantsTechnologiesSchema });
+
+        //Deleted social media
+        await socialMediaSchema.destroy({
+            where: {
+                id_postulant: id
+            }
+        })
+        
+        const applicant = await applicantsSchema.destroy({
+            where: {
+                id
+            }
+        });
+
+        if (applicant.length === 0) { return res.status(404).json({ error: true, message: 'Error, not could deleted applicant' }) }
+        res.status(200).json({
+            error: false,
+            message: 'Applicant deleted correctly'
+        })
+    } catch (e) {
+        res.json({
+            error: true,
+            message: 'Catch Error'
+        });
+        return messageError().catchError('Delete', 'applicant', e);
+    }
+}
+
 export {
     getAtpplicants,
     getAtpplicant,
+    putApplicant,
     postApplicants,
-    putApplicant
+    deleteApplicant
 }
