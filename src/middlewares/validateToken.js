@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import messageError from "../helpers/recruiter/messageError.js";
 
 const verifyToken = async (req, res, next) => {
     
@@ -11,8 +10,8 @@ const verifyToken = async (req, res, next) => {
         req.user = dataValidated;
         next();
     } catch (e) {
-        res.status(401).json({error: true, message: 'Token expired'})
-        messageError().catchError('Login Validate', 'recruiter', e)
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 

@@ -1,4 +1,3 @@
-import messageError from '../helpers/recruiter/messageError.js';
 import applicantsSchema from '../models/applicantsModel.js';
 import applicantsTechnologiesSchema from '../models/applicantsTechnoligiesModel.js';
 import levelEnglishesSchema from '../models/levelEnglishesModel.js';
@@ -36,11 +35,8 @@ const getAtpplicants = async (req, res) => {
             applicants
         })
     } catch (e) {
-        res.status(404).json({
-            error: true,
-            messageError: 'Catch Error'
-        })
-        messageError().catchError('Get', 'postulant', e);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -77,11 +73,8 @@ const getAtpplicant = async (req, res) => {
             applicant
         })
     } catch (e) {
-        res.json({
-            error: true,
-            message: 'Catch Error'
-        })
-        messageError().catchError('Get', 'applicant', e)
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -146,8 +139,8 @@ const putApplicant = async (req, res) => {
             message: 'Applicant updating correctly'
         });
     } catch (e) {
-        res.json({ error: true, message: 'Catch Error' });
-        messageError().catchError('Put', 'Applicant', e);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -200,8 +193,8 @@ const postApplicants = async (req, res) => {
             newApplicant
         });
     } catch (e) {
-        res.status(401).json({ error: true, message: 'Error at create a postulant' });
-        messageError().catchError('Post', 'postulant', e)
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -220,7 +213,7 @@ const deleteApplicant = async (req, res) => {
                 id_postulant: id
             }
         })
-        
+
         const applicant = await applicantsSchema.destroy({
             where: {
                 id
@@ -233,11 +226,8 @@ const deleteApplicant = async (req, res) => {
             message: 'Applicant deleted correctly'
         })
     } catch (e) {
-        res.json({
-            error: true,
-            message: 'Catch Error'
-        });
-        return messageError().catchError('Delete', 'applicant', e);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 

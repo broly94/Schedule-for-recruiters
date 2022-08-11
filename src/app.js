@@ -4,9 +4,9 @@ import morgan from 'morgan';
 import './models/indexModels.js';
 
 //Import Routes
-import { recruiterRoutes } from './routes/Recruiter.routes.js';
-import { loginRoutes } from './routes/Login.routes.js';
-import { applicantsRoutes } from './routes/Applicants.routes.js';
+import { recruiterRoutes } from './routes/recruiter.routes.js';
+import { loginRoutes } from './routes/login.routes.js';
+import { applicantsRoutes } from './routes/applicants.routes.js';
 
 //Config App
 const app = express();

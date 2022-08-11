@@ -1,4 +1,3 @@
-//import express from "express";
 import recruiterSchema from "../../models/recuiterModel.js"
 
 const emailUnique = async (req) => {

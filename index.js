@@ -1,5 +1,5 @@
-import app from './app.js';
-import './db.js';
+import app from './src/app.js'
+import './src/db/connection.js'
 
 //Set port
 app.set('port', process.env.PORT);

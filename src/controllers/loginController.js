@@ -1,5 +1,4 @@
 import recruiterSchema from "../models/recuiterModel.js";
-import messaeError from '../helpers/recruiter/messageError.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -43,7 +42,8 @@ const login = async (req, res) => {
         })
 
     } catch (e) {
-        messaeError().catchError('login', 'recruiter', e)
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { deleteApplicant, getAtpplicant, getAtpplicants, postApplicants, putApplicant } from '../controllers/applicantsController.js';
+
 const router = Router();
 
 

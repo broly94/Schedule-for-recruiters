@@ -1,8 +1,6 @@
 //Schema model recruiter
 import recruiterSchema from '../models/recuiterModel.js';
 import { emailUnique, getEmail } from '../helpers/recruiter/validationEmail.js';
-//Message Errors
-import messageError from '../helpers/recruiter//messageError.js';
 
 //Bcrypt
 import bcrypt from 'bcrypt';
@@ -19,8 +17,8 @@ const getRecruiters = async (req, res) => {
             recruiters
         })
     } catch (e) {
-        res.status(401).json({ error: true, message: 'Error catch capture' })
-        messageError().catchError('getting', 'recruiter', e.message);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -42,8 +40,8 @@ const getRecruiter = async (req, res) => {
             data: recruiter
         })
     } catch (e) {
-        res.status(401).json({ error: true, message: 'Error catch capture' })
-        messageError().catchError('getting', 'recruiter', e.message);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -73,8 +71,8 @@ const postRecruiter = async (req, res) => {
             data: recruiter
         })
     } catch (e) {
-        res.status(401).json({ error: true, message: 'Error catch capture' })
-        messageError().catchError('saved', 'recruiter', e.message);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -107,8 +105,8 @@ const putRecruiter = async (req, res) => {
             message: 'Updated recruiter'
         })
     } catch (e) {
-        res.status(401).json({ error: true, message: 'Error catch capture' })
-        messageError().catchError('updated', 'recruiter', e);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 
@@ -130,8 +128,8 @@ const deleteRecruiter = async (req, res) => {
             message: "Deleted recruiter"
         })
     } catch (e) {
-        res.status(401).json({ error: true, message: 'Error catch capture' })
-        messageError().catchError('deleted', 'recruiter', e.message);
+        console.log(e.message)
+        res.json({ error: true, message: e.message })
     }
 }
 

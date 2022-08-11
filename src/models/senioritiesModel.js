@@ -1,21 +1,19 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../db.js";
+import sequelize from "../db/connection.js";
 
-const technologiesSchema = sequelize.define('technologies', {
-
+const senioritiesSchema = sequelize.define('seniorities', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    technology: {
+    seniority: {
         type: DataTypes.STRING
     }
-
 },
     {
         timestamps: false
     }
-);
+)
 
-export default technologiesSchema;
+export default senioritiesSchema;
