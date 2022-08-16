@@ -23,12 +23,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const app = (0, _express.default)();
 
 _dotenv.default.config(); //Set port
+// app.set('port', process.env.PORT);
+// const port = app.get('port') || 3000;
 
 
-app.set('port', process.env.PORT);
-const port = app.get('port') || 3000; //middlewares
+const port = process.env.PORT || 3000; //middlewares
+//app.use(morgan('dev'));
 
-app.use((0, _morgan.default)('dev'));
 app.use(_express.default.json()); //Routes configuration
 
 app.get('/api', (req, res) => res.json({

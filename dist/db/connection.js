@@ -7,10 +7,10 @@ exports.default = void 0;
 
 var _sequelize = require("sequelize");
 
-const DB_NAME = process.env.DB_NAME || 'leoneldev_schedule_v2';
-const DB_HOST = process.env.DB_HOST || 'localhost';
-const sequelize = new _sequelize.Sequelize(DB_NAME, 'leoneldev', 'leonel_dev', {
-  host: DB_HOST,
+const DB_NAME = process.env.DB_NAME;
+const DB_HOST = process.env.DB_HOST;
+const sequelize = new _sequelize.Sequelize('leoneldev_schedule_v2', 'leoneldev', 'leonel_dev', {
+  host: 'mysql-leoneldev.alwaysdata.net',
   dialect: 'mysql'
 });
 
