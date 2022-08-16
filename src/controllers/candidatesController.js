@@ -22,7 +22,7 @@ const getCandidates = async (req, res) => {
                     attributes: ['level']
                 },
                 {
-                    model: technologiesSchema,
+                    model: technologiesModel,
                     through: { attributes: [] },
                     attributes: ['technology']
                 }
@@ -61,7 +61,7 @@ const getCandidate = async (req, res) => {
                     attributes: ['level']
                 },
                 {
-                    model: technologiesSchema,
+                    model: technologiesModel,
                     through: { attributes: [] },
                     attributes: ['technology']
                 }

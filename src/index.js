@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import './models/associationsModels.js';
+import './db/connection.js'
 
 //Import Routes
 import { recruiterRoutes } from './routes/recruiter.routes.js';
@@ -11,6 +12,10 @@ import { candidatesRoutes } from './routes/candidates.routes.js';
 //Config App
 const app = express();
 dotenv.config()
+
+//Set port
+app.set('port', process.env.PORT);
+const port = app.get('port') || 3000;
 
 //middlewares
 app.use(morgan('dev'));
@@ -23,4 +28,7 @@ app.use('/api/recruiter', recruiterRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/candidate', candidatesRoutes);
 
-export default app;
+//Start server
+app.listen(port, () => {
+    console.log(`Server on port ${port}`);
+})
