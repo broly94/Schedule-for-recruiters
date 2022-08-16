@@ -18,7 +18,7 @@ app.set('port', process.env.PORT);
 const port = app.get('port') || 3000;
 
 //middlewares
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 app.use(express.json());
 
 
