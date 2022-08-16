@@ -1,24 +1,24 @@
-import applicantsSchema from '../models/applicantsModel.js';
-import applicantsTechnologiesSchema from '../models/applicantsTechnoligiesModel.js';
-import levelEnglishesSchema from '../models/levelEnglishesModel.js';
-import senioritiesSchema from '../models/senioritiesModel.js';
-import socialMediaSchema from '../models/socialMediaModel.js';
-import technologiesSchema from '../models/technologiesModel.js';
+import candidatesModel from '../models/candidatesModel.js';
+import candidatesTechnologiesModel from '../models/candidatesTechnoligiesModel.js';
+import englishLevelModel from '../models/englishLevelModel.js';
+import senioritiesModel from '../models/senioritiesModel.js';
+import socialMediaModel from '../models/socialMediaModel.js';
+import technologiesModel from '../models/technologiesModel.js';
 
-const getAtpplicants = async (req, res) => {
+const getCandidates = async (req, res) => {
     try {
-        const applicants = await applicantsSchema.findAll({
+        const candidates = await candidatesModel.findAll({
             include: [
                 {
-                    model: socialMediaSchema,
+                    model: socialMediaModel,
                     attributes: ['facebook', 'linkedin', 'instagram']
                 },
                 {
-                    model: senioritiesSchema,
+                    model: senioritiesModel,
                     attributes: ['seniority']
                 },
                 {
-                    model: levelEnglishesSchema,
+                    model: englishLevelModel,
                     attributes: ['level']
                 },
                 {
@@ -29,10 +29,10 @@ const getAtpplicants = async (req, res) => {
             ]
         });
 
-        if (applicants.length === 0) return res.status(404).json({ error: true, message: 'Error: Not exist applicants in the database' })
+        if (candidates.length === 0) return res.status(404).json({ error: true, message: 'Error: Not exist candidates in the database' })
 
         res.json({
-            applicants
+            candidates
         })
     } catch (e) {
         console.log(e.message)
@@ -40,24 +40,24 @@ const getAtpplicants = async (req, res) => {
     }
 }
 
-const getAtpplicant = async (req, res) => {
+const getCandidate = async (req, res) => {
     try {
         const { id } = req.params;
-        const applicant = await applicantsSchema.findOne({
+        const candidate = await candidatesModel.findOne({
             where: {
                 id
             },
             include: [
                 {
-                    model: socialMediaSchema,
+                    model: socialMediaModel,
                     attributes: ['facebook', 'linkedin', 'instagram']
                 },
                 {
-                    model: senioritiesSchema,
+                    model: senioritiesModel,
                     attributes: ['seniority']
                 },
                 {
-                    model: levelEnglishesSchema,
+                    model: englishLevelModel,
                     attributes: ['level']
                 },
                 {
@@ -67,10 +67,10 @@ const getAtpplicant = async (req, res) => {
                 }
             ]
         });
-        if (applicant.length === 0) { return res.status(404).json({ error: true, message: 'Error not exist this Applicant in the database' }) }
+        if (candidate.length === 0) { return res.status(404).json({ error: true, message: 'Error not exist this candidate in the database' }) }
         res.json({
             error: false,
-            applicant
+            candidate
         })
     } catch (e) {
         console.log(e.message)
@@ -78,7 +78,7 @@ const getAtpplicant = async (req, res) => {
     }
 }
 
-const putApplicant = async (req, res) => {
+const putCandidate = async (req, res) => {
     try {
         const { id } = req.params;
         const {
@@ -89,13 +89,13 @@ const putApplicant = async (req, res) => {
             remuneration,
             description,
             image,
-            level_englishes_id,
+            english_level_id,
             seniorities_id,
             social_media,
             technologies
         } = req.body
 
-        const applicant = await applicantsSchema.update({
+        const candidate = await candidatesModel.update({
             name,
             last_name,
             email,
@@ -103,7 +103,7 @@ const putApplicant = async (req, res) => {
             remuneration,
             description,
             image,
-            level_englishes_id,
+            english_level_id,
             seniorities_id
         },
             {
@@ -114,16 +114,16 @@ const putApplicant = async (req, res) => {
         );
 
         //Update technologies
-        const applicantId = await applicantsSchema.findByPk(id);
-        applicantId.setTechnologies([], { through: applicantsTechnologiesSchema });
+        const candidateForId = await candidatesModel.findByPk(id);
+        candidateForId.setTechnologies([], { through: candidatesTechnologiesModel });
         for (let i = 0; i < technologies.length; i++) {
-            const tec = await technologiesSchema.findByPk(technologies[i]);
-            applicantId.addTechnologies(tec, { through: applicantsTechnologiesSchema });
+            const tec = await technologiesModel.findByPk(technologies[i]);
+            candidateForId.addTechnologies(tec, { through: candidatesTechnologiesModel });
         }
 
         //Update social media
         const { facebook, instagram, linkedin } = social_media;
-        await socialMediaSchema.update({
+        await socialMediaModel.update({
             facebook, instagram, linkedin
         },
             {
@@ -133,10 +133,10 @@ const putApplicant = async (req, res) => {
             }
         );
 
-        if (applicant.length === 0) { return res.status(404).json({ error: true, message: 'Error at updating the applicant' }) }
+        if (candidate.length === 0) { return res.status(404).json({ error: true, message: 'Error at updating the candidate' }) }
         res.status(200).json({
             erorr: false,
-            message: 'Applicant updating correctly'
+            message: 'Candidate updating correctly'
         });
     } catch (e) {
         console.log(e.message)
@@ -144,7 +144,7 @@ const putApplicant = async (req, res) => {
     }
 }
 
-const postApplicants = async (req, res) => {
+const postCandidate = async (req, res) => {
     try {
         const {
             name,
@@ -154,13 +154,13 @@ const postApplicants = async (req, res) => {
             remuneration,
             description,
             image,
-            level_englishes_id,
+            english_level_id,
             seniorities_id,
             social_media,
             technologies
         } = req.body
 
-        const newApplicant = await applicantsSchema.create({
+        const newCandidate = await candidatesModel.create({
             name,
             last_name,
             email,
@@ -168,29 +168,28 @@ const postApplicants = async (req, res) => {
             remuneration,
             description,
             image,
-            level_englishes_id,
+            english_level_id,
             seniorities_id,
         });
 
         for (let i = 0; i < technologies.length; i++) {
-            const tec = await technologiesSchema.findByPk(technologies[i]);
-            newApplicant.addTechnologies(tec, { through: applicantsTechnologiesSchema });
+            const tec = await technologiesModel.findByPk(technologies[i]);
+            newCandidate.addTechnologies(tec, { through: candidatesTechnologiesModel });
         }
 
-        let { id } = newApplicant;
-
+        let { id } = newCandidate;
         const { facebook, instagram, linkedin } = social_media;
 
-        await socialMediaSchema.create({
-            id_postulant: id,
+        await socialMediaModel.create({
+            id_candidate: id,
             facebook,
             instagram,
             linkedin
         })
 
         res.status(200).json({
-            message: 'Postulant created',
-            newApplicant
+            message: 'Candidate created',
+            newCandidate
         });
     } catch (e) {
         console.log(e.message)
@@ -198,32 +197,31 @@ const postApplicants = async (req, res) => {
     }
 }
 
-const deleteApplicant = async (req, res) => {
+const deleteCandidate = async (req, res) => {
     try {
         const { id } = req.params;
 
         //Deleted technologies
-        const applicantId = await applicantsSchema.findByPk(id);
-
-        applicantId.removeTechnologies({ through: applicantsTechnologiesSchema });
+        const candidateForId = await candidatesModel.findByPk(id);
+        candidateForId.removeTechnologies({ through: candidatesTechnologiesModel });
 
         //Deleted social media
-        await socialMediaSchema.destroy({
+        await socialMediaModel.destroy({
             where: {
                 id_postulant: id
             }
         })
 
-        const applicant = await applicantsSchema.destroy({
+        const candidate = await candidatesModel.destroy({
             where: {
                 id
             }
         });
 
-        if (applicant.length === 0) { return res.status(404).json({ error: true, message: 'Error, not could deleted applicant' }) }
+        if (candidate.length === 0) { return res.status(404).json({ error: true, message: 'Error, not could deleted candidate' }) }
         res.status(200).json({
             error: false,
-            message: 'Applicant deleted correctly'
+            message: 'Candidate deleted correctly'
         })
     } catch (e) {
         console.log(e.message)
@@ -232,9 +230,9 @@ const deleteApplicant = async (req, res) => {
 }
 
 export {
-    getAtpplicants,
-    getAtpplicant,
-    putApplicant,
-    postApplicants,
-    deleteApplicant
+    getCandidate,
+    getCandidates,
+    putCandidate,
+    postCandidate,
+    deleteCandidate
 }

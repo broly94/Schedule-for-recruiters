@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db/connection.js';
 
-const applicantsSchema = sequelize.define('applicants', {
+const candidatesModel = sequelize.define('candidates', {
     
     id: {
         type: DataTypes.INTEGER,
@@ -52,7 +52,7 @@ const applicantsSchema = sequelize.define('applicants', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    level_englishes_id: {
+    english_level_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -79,4 +79,4 @@ const applicantsSchema = sequelize.define('applicants', {
 );
 
 
-export default applicantsSchema;
+export default candidatesModel;

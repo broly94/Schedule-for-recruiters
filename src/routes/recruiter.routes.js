@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-import { getRecruiter, postRecruiter, putRecruiter, deleteRecruiter, getRecruiters } from '../controllers/recruiterController.js';
+import { getRecruiter, postRecruiter, putRecruiter, deleteRecruiter, getRecruiters } from '../controllers/recruitersController.js';
 import { verifyToken } from '../middlewares/validateToken.js';
 
 router
@@ -9,9 +9,8 @@ router
     .get(verifyToken, getRecruiters)
     .post(postRecruiter)
     
-    
-router
-    .route('/:id')
+    router
+    .route('/:recruiter_id')
     .get(verifyToken, getRecruiter)
     .put(verifyToken, putRecruiter)
     .delete(verifyToken, deleteRecruiter)

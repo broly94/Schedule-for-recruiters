@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/connection.js";
 
-const senioritiesSchema = sequelize.define('seniorities', {
+const senioritiesModel = sequelize.define('seniorities', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -16,4 +16,4 @@ const senioritiesSchema = sequelize.define('seniorities', {
     }
 )
 
-export default senioritiesSchema;
+export default senioritiesModel;

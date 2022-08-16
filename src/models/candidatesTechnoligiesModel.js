@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/connection.js";
 
-const applicantsTechnologiesSchema = sequelize.define('applicantstechnologies', {
+const candidatesTechnologiesModel = sequelize.define('candidatestechnologies', {
 
     id: {
         type: DataTypes.INTEGER,
@@ -14,7 +14,7 @@ const applicantsTechnologiesSchema = sequelize.define('applicantstechnologies', 
     updatedAt: {
         type: DataTypes.DATE
     },
-    applicantId: {
+    candidateId: {
         type: DataTypes.INTEGER
     },
     technologiId: {
@@ -27,4 +27,4 @@ const applicantsTechnologiesSchema = sequelize.define('applicantstechnologies', 
     }
 )
 
-export default applicantsTechnologiesSchema;
+export default candidatesTechnologiesModel;

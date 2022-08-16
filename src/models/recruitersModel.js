@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db/connection.js';
 
-const recruiterSchema = sequelize.define('recruiters', {
+const recruitersModel = sequelize.define('recruiters', {
     
     id: {
         type: DataTypes.INTEGER,
@@ -37,6 +37,12 @@ const recruiterSchema = sequelize.define('recruiters', {
 
         },
         allowNull: false
+    },
+    is_premium: {
+        type: DataTypes.BOOLEAN,
+        notEmpty: true,
+        notNull: true,
+        allowNull: false,
     }
 },
     {
@@ -46,4 +52,4 @@ const recruiterSchema = sequelize.define('recruiters', {
     }
 )
 
-export default recruiterSchema;
+export default recruitersModel;

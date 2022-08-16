@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/connection.js";
 
-const levelEnglishesSchema = sequelize.define('level_englishes', {
+const englishLevelModel = sequelize.define('english_level', {
 
     id: {
         type: DataTypes.INTEGER,
@@ -17,4 +17,4 @@ const levelEnglishesSchema = sequelize.define('level_englishes', {
     }
 )
 
-export default levelEnglishesSchema;
+export default englishLevelModel;

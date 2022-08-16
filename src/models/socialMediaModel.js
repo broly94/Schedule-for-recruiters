@@ -1,14 +1,14 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db/connection.js';
 
-const socialMediaSchema = sequelize.define('social_media', {
+const socialMediaModel = sequelize.define('social_media', {
 
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    id_postulant: {
+    candidate_id: {
         type: DataTypes.INTEGER,
         unique: true
     },
@@ -29,4 +29,4 @@ const socialMediaSchema = sequelize.define('social_media', {
    }
 )
 
-export default socialMediaSchema
+export default socialMediaModel

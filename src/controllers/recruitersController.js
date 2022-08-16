@@ -1,5 +1,5 @@
 //Schema model recruiter
-import recruiterSchema from '../models/recuiterModel.js';
+import recruitersModel from '../models/recruitersModel.js';
 import { emailUnique, getEmail } from '../helpers/recruiter/validationEmail.js';
 
 //Bcrypt
@@ -8,7 +8,7 @@ const saltRounds = 10;
 
 const getRecruiters = async (req, res) => {
     try {
-        const recruiters = await recruiterSchema.findAll();
+        const recruiters = await recruitersModel.findAll();
         if (recruiters.length === 0) res.status(404).json({ error: true, message: 'Error, could not get recruiters' })
         const { email } = req.user;
         res.status(200).json({
@@ -24,17 +24,20 @@ const getRecruiters = async (req, res) => {
 
 const getRecruiter = async (req, res) => {
     try {
-        const id = req.params.id;
-        const recruiter = await recruiterSchema.findAll({
+        const { recruiter_id } = req.params;
+        const recruiter = await recruitersModel.findAll({
             where: {
-                id_recruiter: id
+                id: recruiter_id
             }
         });
-        if (recruiter.length == 0) res.status(400).json({ error: true, message: 'Error, cloud not get the recruiter' });
+
+        if (recruiter.length == 0) {
+            return res.status(404).json({ error: true, message: 'Error, cloud not get the recruiter' });
+        }
 
         const { email } = req.user;
-        
-        res.status(200).json({
+
+        return res.status(200).json({
             error: false,
             userLogin: email,
             data: recruiter
@@ -47,7 +50,7 @@ const getRecruiter = async (req, res) => {
 
 const postRecruiter = async (req, res) => {
     try {
-        const { name, last_name, email, password } = req.body
+        const { name, last_name, email, password, is_premium } = req.body
         //Hash password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
@@ -57,11 +60,16 @@ const postRecruiter = async (req, res) => {
             error: true,
             message: 'Error, there is already a recruiter in database'
         })
-        const recruiter = await recruiterSchema.create({
+
+        //Validate is_premium 
+        const premiumNumber = parseInt(is_premium);
+
+        const recruiter = await recruitersModel.create({
             name,
             last_name,
             email,
-            password: hash
+            password: hash,
+            is_premium: premiumNumber
         });
         if (recruiter.length === 0) res.status(400).json({ error: true, message: 'Error, could is not created recruiter' });
 
@@ -85,7 +93,7 @@ const putRecruiter = async (req, res) => {
         //Hash password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
-        const response = await recruiterSchema.update({
+        const response = await recruitersModel.update({
             name,
             last_name,
             email,
@@ -113,7 +121,7 @@ const putRecruiter = async (req, res) => {
 const deleteRecruiter = async (req, res) => {
     try {
         const id = req.params.id;
-        const response = await recruiterSchema.destroy({
+        const response = await recruitersModel.destroy({
             where: {
                 id_recruiter: id
             }
