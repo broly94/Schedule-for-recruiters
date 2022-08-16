@@ -16,6 +16,7 @@ dotenv.config()
 app.use(morgan('dev'));
 app.use(express.json());
 
+
 //Routes configuration
 app.get('/api', (req, res) => res.json({developer: 'Leonel Carro', project: 'schedule for recruiters'}));
 app.use('/api/recruiter', recruiterRoutes);
