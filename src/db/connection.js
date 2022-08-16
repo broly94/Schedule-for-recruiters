@@ -3,8 +3,8 @@ import { Sequelize } from 'sequelize';
 const DB_NAME = process.env.DB_NAME
 const DB_HOST = process.env.DB_HOST
 
-const sequelize = new Sequelize(DB_NAME, 'leoneldev', 'leonel_dev', {
-    host: DB_HOST,
+const sequelize = new Sequelize('leoneldev_schedule_v2', 'leoneldev', 'leonel_dev', {
+    host: 'mysql-leoneldev.alwaysdata.net',
     dialect: 'mysql'
 })
 
