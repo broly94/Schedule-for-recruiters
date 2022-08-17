@@ -14,13 +14,11 @@ const app = express();
 dotenv.config()
 
 //Set port
-// app.set('port', process.env.PORT);
-// const port = app.get('port') || 3000;
-
-const port = process.env.PORT || 3000;
+app.set('port', process.env.PORT);
+const port = app.get('port') || 3000;
 
 //middlewares
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 
 
