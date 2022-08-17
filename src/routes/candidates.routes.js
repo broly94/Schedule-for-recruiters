@@ -1,17 +1,18 @@
 import { Router } from 'express';
-import { deleteCandidate, getCandidate, getCandidates, postCandidate, putCandidate } from '../controllers/candidatesController.js';
-
 const router = Router();
+
+import { deleteCandidate, getCandidate, getCandidates, postCandidate, putCandidate } from '../controllers/candidatesController.js';
+import { verifyToken } from '../middlewares/validateToken.js';
 
 
 router.route('/')
-    .post(postCandidate)
-    .get(getCandidates)
+    .post(verifyToken, postCandidate)
+    .get(verifyToken, getCandidates)
 
 router.route('/:id')
-    .get(getCandidate)
-    .put(putCandidate)
-    .delete(deleteCandidate)
+    .get(verifyToken, getCandidate)
+    .put(verifyToken, putCandidate)
+    .delete(verifyToken, deleteCandidate)
 
 export {
     router as candidatesRoutes

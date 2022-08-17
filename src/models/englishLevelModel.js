@@ -13,7 +13,8 @@ const englishLevelModel = sequelize.define('english_level', {
     }  
 },
     {
-        timestamps: false
+        timestamps: false,
+        freezeTableName: true
     }
 )
 

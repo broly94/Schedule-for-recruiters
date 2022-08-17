@@ -61,14 +61,14 @@ const candidatesModel = sequelize.define('candidates', {
             notEmpty: true
         }
     },
-    seniorities_id: {
+    seniority_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
             isInt: true,
             notNull: true,
             notEmpty: true
-        }
+        },
     }
 },
     {

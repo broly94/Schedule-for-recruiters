@@ -1,3 +1,4 @@
+import { updateTechnologies } from '../helpers/candidate';
 import candidatesModel from '../models/candidatesModel.js';
 import candidatesTechnologiesModel from '../models/candidatesTechnoligiesModel.js';
 import englishLevelModel from '../models/englishLevelModel.js';
@@ -29,14 +30,14 @@ const getCandidates = async (req, res) => {
             ]
         });
 
-        if (candidates.length === 0) return res.status(404).json({ error: true, message: 'Error: Not exist candidates in the database' })
+        if (candidates.length === 0) return res.json({ error: true, message: 'Error: Not exist candidates in the database' })
 
-        res.json({
+        return res.json({
             candidates
         })
     } catch (e) {
         console.log(e.message)
-        res.json({ error: true, message: e.message })
+        return res.json({ error: true, message: e.message })
     }
 }
 
@@ -67,14 +68,16 @@ const getCandidate = async (req, res) => {
                 }
             ]
         });
-        if (candidate.length === 0) { return res.status(404).json({ error: true, message: 'Error not exist this candidate in the database' }) }
-        res.json({
+
+        if (candidate.length === 0) return res.json({ error: true, message: 'Error not exist this candidate in the database' })
+
+        return res.json({
             error: false,
             candidate
         })
     } catch (e) {
         console.log(e.message)
-        res.json({ error: true, message: e.message })
+        return res.json({ error: true, message: e.message })
     }
 }
 
@@ -113,13 +116,10 @@ const putCandidate = async (req, res) => {
             }
         );
 
-        //Update technologies
-        const candidateForId = await candidatesModel.findByPk(id);
-        candidateForId.setTechnologies([], { through: candidatesTechnologiesModel });
-        for (let i = 0; i < technologies.length; i++) {
-            const tec = await technologiesModel.findByPk(technologies[i]);
-            candidateForId.addTechnologies(tec, { through: candidatesTechnologiesModel });
-        }
+        let candidateForId = await candidatesModel.findByPk(id);
+        await candidateForId.setTechnologies([], { through: candidatesTechnologiesModel })
+        
+        updateTechnologies(candidateForId, technologies, candidatesTechnologiesModel);
 
         //Update social media
         const { facebook, instagram, linkedin } = social_media;
@@ -128,7 +128,7 @@ const putCandidate = async (req, res) => {
         },
             {
                 where: {
-                    id_postulant: id
+                    candidate_id: id
                 }
             }
         );
@@ -155,7 +155,7 @@ const postCandidate = async (req, res) => {
             description,
             image,
             english_level_id,
-            seniorities_id,
+            seniority_id,
             social_media,
             technologies
         } = req.body
@@ -169,19 +169,19 @@ const postCandidate = async (req, res) => {
             description,
             image,
             english_level_id,
-            seniorities_id,
+            seniority_id
         });
 
-        for (let i = 0; i < technologies.length; i++) {
-            const tec = await technologiesModel.findByPk(technologies[i]);
+        technologies.map(async (tech) => {
+            const tec = await technologiesModel.findByPk(tech);
             newCandidate.addTechnologies(tec, { through: candidatesTechnologiesModel });
-        }
+        })
 
         let { id } = newCandidate;
         const { facebook, instagram, linkedin } = social_media;
 
         await socialMediaModel.create({
-            id_candidate: id,
+            candidate_id: id,
             facebook,
             instagram,
             linkedin
