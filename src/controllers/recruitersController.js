@@ -1,6 +1,6 @@
 //Schema model recruiter
 import recruitersModel from '../models/recruitersModel.js';
-import { emailUnique, getEmail } from '../helpers/recruiter/validationEmail.js';
+import { emailUnique } from '../helpers/recruiter/validationEmail.js';
 
 //Bcrypt
 import bcrypt from 'bcrypt';
@@ -50,7 +50,7 @@ const getRecruiter = async (req, res) => {
 
 const postRecruiter = async (req, res) => {
     try {
-        const { name, last_name, email, password, is_premium } = req.body
+        const { name, last_name, email, password, is_premium, is_shared } = req.body
         //Hash password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
@@ -69,7 +69,8 @@ const postRecruiter = async (req, res) => {
             last_name,
             email,
             password: hash,
-            is_premium: premiumNumber
+            is_premium: premiumNumber,
+            is_shared
         });
         if (recruiter.length === 0) res.status(400).json({ error: true, message: 'Error, could is not created recruiter' });
 
@@ -86,30 +87,31 @@ const postRecruiter = async (req, res) => {
 
 const putRecruiter = async (req, res) => {
     try {
-        const id = req.params.id;
-        const { name, last_name, password } = req.body;
-        //get Email
-        const { email } = await getEmail(req);
+        const { recruiter_id } = req.params;
+        const { name, last_name, password, is_premium, is_shared } = req.body;
+
         //Hash password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
+
         const response = await recruitersModel.update({
             name,
             last_name,
-            email,
-            password: hash
+            password: hash,
+            is_premium,
+            is_shared
         }, {
             where: {
-                id_recruiter: id
+                id: recruiter_id
             }
         })
         if (response === 0) return res.status(404).json({ error: true, message: "Error, could not updated recruiter" });
 
-        const userLogin = req.user;
+        const { email } = req.user;
 
         return res.json({
             error: false,
-            userLogin: userLogin.email,
+            userLogin: email,
             message: 'Updated recruiter'
         })
     } catch (e) {
@@ -120,10 +122,10 @@ const putRecruiter = async (req, res) => {
 
 const deleteRecruiter = async (req, res) => {
     try {
-        const id = req.params.id;
+        const { recruiter_id } = req.params;
         const response = await recruitersModel.destroy({
             where: {
-                id_recruiter: id
+                id: recruiter_id
             }
         })
         if (response === 0) return res.status(400).json({ error: true, message: "Error, could not deleted recruiter" });

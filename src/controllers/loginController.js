@@ -18,6 +18,7 @@ const login = async (req, res) => {
 
         const data = recruiter.map(e => {
             return {
+                name: e.name,
                 email: e.email,
                 password: e.password
             }
@@ -27,7 +28,7 @@ const login = async (req, res) => {
         const [dataRecruiter] = data;
         
         const validationPassword = bcrypt.compareSync(password, dataRecruiter.password);
-        if (!validationPassword) res.status(404).json({ error: true, message: "Error, do you not can not get into" })
+        if (!validationPassword) return res.json({ error: true, message: "Error, do you not can not get into" })
 
         const token = jwt.sign({
             email: dataRecruiter.email,
@@ -39,7 +40,8 @@ const login = async (req, res) => {
         return res.status(200).json({
             error: false,
             message: "Welcome",
-            token
+            email: dataRecruiter.email,
+            name: dataRecruiter.name
         })
 
     } catch (e) {

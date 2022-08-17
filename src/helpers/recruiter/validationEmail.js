@@ -1,9 +1,9 @@
 import recruitersModel from "../../models/recruitersModel.js"
 
 const emailUnique = async (req) => {
-    
+
     const { email } = req.body;
-    
+
     const recruiter = await recruitersModel.findAll({
         where: {
             email
@@ -16,11 +16,11 @@ const emailUnique = async (req) => {
 
 const getEmail = async (req) => {
 
-    const id = req.params.id;
+    const { recruiter_id } = req.params;
 
     const recruiter = await recruitersModel.findAll({
         where: {
-            id
+            id: recruiter_id
         }
     })
 

@@ -10,11 +10,9 @@ const recruitersModel = sequelize.define('recruiters', {
     },
     name: {
         type: DataTypes.STRING,
-        validate: {
-            notEmpty: true,
-            notNull: true
-        },
-        allowNull: false
+        notEmpty: true,
+        notNull: true,
+        allowNull: false,
     },
     last_name: {
         type: DataTypes.STRING
@@ -34,7 +32,6 @@ const recruitersModel = sequelize.define('recruiters', {
         validate: {
             notEmpty: true,
             notNull: true,
-
         },
         allowNull: false
     },
@@ -43,6 +40,13 @@ const recruitersModel = sequelize.define('recruiters', {
         notEmpty: true,
         notNull: true,
         allowNull: false,
+    },
+    is_shared: {
+        type: DataTypes.INTEGER,
+        validate: {
+            min: 0,
+            max: 3
+        }
     }
 },
     {
