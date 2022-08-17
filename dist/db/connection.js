@@ -5,12 +5,20 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _dotenv = _interopRequireDefault(require("dotenv"));
+
 var _sequelize = require("sequelize");
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_dotenv.default.config();
+
 const DB_NAME = process.env.DB_NAME;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_HOST = process.env.DB_HOST;
-const sequelize = new _sequelize.Sequelize('leoneldev_schedule_v2', 'leoneldev', 'leonel_dev', {
-  host: 'mysql-leoneldev.alwaysdata.net',
+const sequelize = new _sequelize.Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
   dialect: 'mysql'
 });
 

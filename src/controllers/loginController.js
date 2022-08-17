@@ -1,4 +1,4 @@
-import recruiterModel from "../models/recruitersModel.js";
+import recruitersModel from "../models/recruitersModel.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -8,13 +8,13 @@ const login = async (req, res) => {
 
         const { email, password } = req.body;
 
-        const recruiter = await recruiterModel.findAll({
+        const recruiter = await recruitersModel.findAll({
             where: {
                 email
             }
         });
 
-        if (recruiter.length === 0) res.status(404).json({ error: true, message: 'Error, this recruiter doest not exist' });
+        if (recruiter.length === 0) return res.status(404).json({ error: true, message: 'Error, this recruiter doest not exist' });
 
         const data = recruiter.map(e => {
             return {
@@ -36,7 +36,7 @@ const login = async (req, res) => {
 
         res.header('token', token)
 
-        res.status(200).json({
+        return res.status(200).json({
             error: false,
             message: "Welcome",
             token
@@ -44,7 +44,7 @@ const login = async (req, res) => {
 
     } catch (e) {
         console.log(e.message)
-        res.json({ error: true, message: e.message })
+        return res.json({ error: true, message: e.message })
     }
 }
 

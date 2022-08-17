@@ -2,8 +2,6 @@
 
 var _express = _interopRequireDefault(require("express"));
 
-var _dotenv = _interopRequireDefault(require("dotenv"));
-
 var _morgan = _interopRequireDefault(require("morgan"));
 
 require("./models/associationsModels.js");
@@ -20,16 +18,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //Import Routes
 //Config App
-const app = (0, _express.default)();
+const app = (0, _express.default)(); //Set vars
 
-_dotenv.default.config(); //Set port
-// app.set('port', process.env.PORT);
-// const port = app.get('port') || 3000;
+app.set('port', process.env.PORT);
+const port = app.get('port') || 3000; //middlewares
 
-
-const port = process.env.PORT || 3000; //middlewares
-//app.use(morgan('dev'));
-
+app.use((0, _morgan.default)('dev'));
 app.use(_express.default.json()); //Routes configuration
 
 app.get('/api', (req, res) => res.json({
