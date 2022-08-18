@@ -11,6 +11,6 @@ export const updateTechnologies = async (candidate, technologies) => {
     const technologiesClear = TechnologiesAllArray.filter((tech, index) => {
         return TechnologiesAllArray.indexOf(tech) === index;
     })
-    
+
     await candidate.addTechnologies(technologiesClear, { through: candidatesTechnologiesModel })
 }

@@ -76,4 +76,4 @@ export const candidatesModel = sequelize.define('candidates', {
         createdAt: true,
         updatedAt: true
     }
-);
+)

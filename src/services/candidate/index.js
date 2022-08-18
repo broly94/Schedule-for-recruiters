@@ -1,3 +1,5 @@
 export * from './findAllCandidates.js'
 export * from './findCandidateById.js'
 export * from './updateCandidateById.js'
+export * from './createCandidate.js'
+export * from './deleteCandidateById.js'

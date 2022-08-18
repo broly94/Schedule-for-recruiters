@@ -1,6 +1,7 @@
 //Schema model recruiter
-import recruitersModel from '../models/recruitersModel.js';
+import { recruitersModel } from '../models';
 //import { emailUnique } from '../helpers/recruiter/validationEmail.js';
+import { findAllRecruiters } from '../services/recruiter';
 
 //Bcrypt
 import bcrypt from 'bcrypt';
@@ -8,17 +9,21 @@ const saltRounds = 10;
 
 const getRecruiters = async (req, res) => {
     try {
-        const recruiters = await recruitersModel.findAll();
-        if (recruiters.length === 0) res.status(404).json({ error: true, message: 'Error, could not get recruiters' })
+       
+        const recruiters = await findAllRecruiters()
+
+        if (recruiters.length === 0) return res.json({ error: true, message: 'No hay reclutadores' })
+
         const { email } = req.user;
-        res.status(200).json({
+
+        return res.json({
             error: false,
             userLogin: email,
             recruiters
         })
     } catch (e) {
         console.log(e.message)
-        res.json({ error: true, message: e.message })
+        return res.json({ error: true, message: e.message })
     }
 }
 

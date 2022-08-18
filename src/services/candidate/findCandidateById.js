@@ -3,11 +3,11 @@ import { candidatesModel, socialMediaModel, senioritiesModel, englishLevelModel,
 export const findCandidateById = async (id) => {
 
     try {
-
         return await candidatesModel.findOne({
             where: {
                 id
             },
+            attributes: ['id', 'name', 'last_name', 'email', 'available', 'remuneration', 'description', 'image'],
             include: [
                 {
                     model: socialMediaModel,
@@ -28,7 +28,6 @@ export const findCandidateById = async (id) => {
                 }
             ]
         })
-
     } catch (e) {
         console.log(e.message)
     }

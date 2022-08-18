@@ -1,5 +1,5 @@
-import { Router } from "express";
-const router = Router();
+import { Router } from "express"
+const router = Router()
 
 import { getRecruiter, postRecruiter, putRecruiter, deleteRecruiter, getRecruiters } from '../controllers/recruitersController.js';
 import { verifyToken } from '../middlewares/validateToken.js';

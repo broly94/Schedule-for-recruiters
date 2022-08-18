@@ -5,7 +5,7 @@ export const findAllCandidates = async () => {
     try {
 
         return await candidatesModel.findAll({
-            
+            attributes: ['id', 'name', 'last_name', 'email', 'available', 'remuneration', 'description', 'image'],
             include: [
                 {
                     model: socialMediaModel,

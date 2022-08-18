@@ -12,9 +12,9 @@ const login = async (req, res) => {
             where: {
                 email
             }
-        });
+        })
 
-        if (recruiter.length === 0) return res.status(404).json({ error: true, message: 'Error, this recruiter doest not exist' });
+        if (recruiter.length === 0) return res.json({ error: true, message: "El usuario o contraseña no coinciden" });
 
         const data = recruiter.map(e => {
             return {
@@ -24,11 +24,10 @@ const login = async (req, res) => {
             }
         });
 
-
         const [dataRecruiter] = data;
 
         const validationPassword = bcrypt.compareSync(password, dataRecruiter.password);
-        if (!validationPassword) return res.json({ error: true, message: "Error, do you not can not get into" })
+        if (!validationPassword) return res.json({ error: true, message: "El usuario o contraseña no coinciden" })
 
         const token = jwt.sign({
             email: dataRecruiter.email,
@@ -37,11 +36,12 @@ const login = async (req, res) => {
 
         res.header('token', token)
 
-        return res.status(200).json({
+        return res.json({
             error: false,
-            message: "Welcome",
+            message: "Bienvenido",
             email: dataRecruiter.email,
-            name: dataRecruiter.name
+            name: dataRecruiter.name,
+            token
         })
 
     } catch (e) {
