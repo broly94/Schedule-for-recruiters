@@ -1,6 +1,6 @@
 //Schema model recruiter
 import recruitersModel from '../models/recruitersModel.js';
-import { emailUnique } from '../helpers/recruiter/validationEmail.js';
+//import { emailUnique } from '../helpers/recruiter/validationEmail.js';
 
 //Bcrypt
 import bcrypt from 'bcrypt';
@@ -54,12 +54,13 @@ const postRecruiter = async (req, res) => {
         //Hash password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
+
         //Validation email
-        const validationEmail = await emailUnique(req, res);
+        /*const validationEmail = await emailUnique(req, res);
         if (validationEmail.length === 1) return res.status(400).json({
             error: true,
             message: 'Error, there is already a recruiter in database'
-        })
+        })*/
 
         //Validate is_premium 
         const premiumNumber = parseInt(is_premium);

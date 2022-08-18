@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/connection.js";
 
-const senioritiesModel = sequelize.define('seniorities', {
+export const senioritiesModel = sequelize.define('seniorities', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -15,5 +15,3 @@ const senioritiesModel = sequelize.define('seniorities', {
         timestamps: false
     }
 )
-
-export default senioritiesModel;

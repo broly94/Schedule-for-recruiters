@@ -1,4 +1,4 @@
-import recruitersModel from "../models/recruitersModel.js";
+import { recruitersModel } from "../models";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -24,9 +24,9 @@ const login = async (req, res) => {
             }
         });
 
-        
+
         const [dataRecruiter] = data;
-        
+
         const validationPassword = bcrypt.compareSync(password, dataRecruiter.password);
         if (!validationPassword) return res.json({ error: true, message: "Error, do you not can not get into" })
 

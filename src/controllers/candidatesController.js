@@ -1,40 +1,17 @@
-import { updateTechnologies } from '../helpers/candidate';
-import candidatesModel from '../models/candidatesModel.js';
-import candidatesTechnologiesModel from '../models/candidatesTechnoligiesModel.js';
-import englishLevelModel from '../models/englishLevelModel.js';
-import senioritiesModel from '../models/senioritiesModel.js';
-import socialMediaModel from '../models/socialMediaModel.js';
-import technologiesModel from '../models/technologiesModel.js';
+import { candidatesModel, candidatesTechnologiesModel, englishLevelModel, senioritiesModel, socialMediaModel, technologiesModel } from '../models/index.js';
+
+import { findAllCandidates, findCandidateById, updateCandidateById } from '../services/candidate'
 
 const getCandidates = async (req, res) => {
+
     try {
-        const candidates = await candidatesModel.findAll({
-            include: [
-                {
-                    model: socialMediaModel,
-                    attributes: ['facebook', 'linkedin', 'instagram']
-                },
-                {
-                    model: senioritiesModel,
-                    attributes: ['seniority']
-                },
-                {
-                    model: englishLevelModel,
-                    attributes: ['level']
-                },
-                {
-                    model: technologiesModel,
-                    through: { attributes: [] },
-                    attributes: ['technology']
-                }
-            ]
-        });
+        const candidates = await findAllCandidates()
 
-        if (candidates.length === 0) return res.json({ error: true, message: 'Error: Not exist candidates in the database' })
+        if (candidates.length === 0) {
+            return res.json({ error: true, message: 'Error: No existen candidatos' })
+        }
 
-        return res.json({
-            candidates
-        })
+        return res.json({ error: false, candidates: candidates })
     } catch (e) {
         console.log(e.message)
         return res.json({ error: true, message: e.message })
@@ -42,39 +19,15 @@ const getCandidates = async (req, res) => {
 }
 
 const getCandidate = async (req, res) => {
+
     try {
         const { id } = req.params;
-        const candidate = await candidatesModel.findOne({
-            where: {
-                id
-            },
-            include: [
-                {
-                    model: socialMediaModel,
-                    attributes: ['facebook', 'linkedin', 'instagram']
-                },
-                {
-                    model: senioritiesModel,
-                    attributes: ['seniority']
-                },
-                {
-                    model: englishLevelModel,
-                    attributes: ['level']
-                },
-                {
-                    model: technologiesModel,
-                    through: { attributes: [] },
-                    attributes: ['technology']
-                }
-            ]
-        });
 
-        if (candidate.length === 0) return res.json({ error: true, message: 'Error not exist this candidate in the database' })
+        const candidate = await findCandidateById(id)
 
-        return res.json({
-            error: false,
-            candidate
-        })
+        if (candidate === null) return res.json({ error: true, message: 'Error el candidato no existe' })
+
+        return res.json({ error: false, candidato: candidate })
     } catch (e) {
         console.log(e.message)
         return res.json({ error: true, message: e.message })
@@ -84,59 +37,18 @@ const getCandidate = async (req, res) => {
 const putCandidate = async (req, res) => {
     try {
         const { id } = req.params;
-        const {
-            name,
-            last_name,
-            email,
-            available,
-            remuneration,
-            description,
-            image,
-            english_level_id,
-            seniorities_id,
-            social_media,
-            technologies
-        } = req.body
 
-        const candidate = await candidatesModel.update({
-            name,
-            last_name,
-            email,
-            available,
-            remuneration,
-            description,
-            image,
-            english_level_id,
-            seniorities_id
-        },
-            {
-                where: {
-                    id
-                }
-            }
-        );
+        const requestCandidate = req.body
 
-        let candidateForId = await candidatesModel.findByPk(id);
-        await candidateForId.setTechnologies([], { through: candidatesTechnologiesModel })
-        
-        updateTechnologies(candidateForId, technologies, candidatesTechnologiesModel);
+        const candidate = await updateCandidateById(id, requestCandidate)
 
-        //Update social media
-        const { facebook, instagram, linkedin } = social_media;
-        await socialMediaModel.update({
-            facebook, instagram, linkedin
-        },
-            {
-                where: {
-                    candidate_id: id
-                }
-            }
-        );
+        if (candidate === undefined) {
+            return res.json({ error: true, message: 'Error al actualizar el candidato' })
+        }
 
-        if (candidate.length === 0) { return res.status(404).json({ error: true, message: 'Error at updating the candidate' }) }
-        res.status(200).json({
+        return res.json({
             erorr: false,
-            message: 'Candidate updating correctly'
+            message: 'Candidato actualizado correctamente'
         });
     } catch (e) {
         console.log(e.message)
@@ -145,41 +57,38 @@ const putCandidate = async (req, res) => {
 }
 
 const postCandidate = async (req, res) => {
+
     try {
-        const {
-            name,
-            last_name,
-            email,
-            available,
-            remuneration,
-            description,
-            image,
-            english_level_id,
-            seniority_id,
-            social_media,
-            technologies
-        } = req.body
 
-        const newCandidate = await candidatesModel.create({
-            name,
-            last_name,
-            email,
-            available,
-            remuneration,
-            description,
-            image,
-            english_level_id,
-            seniority_id
-        });
+        const { name, last_name, email, available, remuneration, description, image, english_level_id, seniority_id, social_media, technologies } = req.body
 
+        //Create new candidate
+        const newCandidate = await candidatesModel.create(
+            {
+                name,
+                last_name,
+                email,
+                available,
+                remuneration,
+                description,
+                image,
+                english_level_id,
+                seniority_id
+            }
+        )
+
+        //Add technologies to candidate
         technologies.map(async (tech) => {
             const tec = await technologiesModel.findByPk(tech);
             newCandidate.addTechnologies(tec, { through: candidatesTechnologiesModel });
         })
 
-        let { id } = newCandidate;
+        const { id } = newCandidate;
+
+        //Get social media request
         const { facebook, instagram, linkedin } = social_media;
 
+        //Create social media
         await socialMediaModel.create({
             candidate_id: id,
             facebook,
@@ -188,8 +97,8 @@ const postCandidate = async (req, res) => {
         })
 
         res.status(200).json({
-            message: 'Candidate created',
-            newCandidate
+            message: 'Candidato creado correctamente',
+            candidato: newCandidate
         });
     } catch (e) {
         console.log(e.message)
@@ -198,34 +107,42 @@ const postCandidate = async (req, res) => {
 }
 
 const deleteCandidate = async (req, res) => {
+
     try {
+
         const { id } = req.params;
 
         //Deleted technologies
         const candidateForId = await candidatesModel.findByPk(id);
-        candidateForId.removeTechnologies({ through: candidatesTechnologiesModel });
+
+        if (candidateForId === null) return res.json({ error: true, message: 'Error, el candidato no existe' })
+
+        const technologiesAll = await candidateForId.getTechnologies({ through: candidatesTechnologiesModel })
+
+        await candidateForId.removeTechnologies(technologiesAll, { through: candidatesTechnologiesModel })
 
         //Deleted social media
         await socialMediaModel.destroy({
             where: {
-                id_postulant: id
+                candidate_id: id
             }
         })
 
-        const candidate = await candidatesModel.destroy({
+        //Deleted candidate
+        await candidatesModel.destroy({
             where: {
                 id
             }
         });
 
-        if (candidate.length === 0) { return res.status(404).json({ error: true, message: 'Error, not could deleted candidate' }) }
-        res.status(200).json({
+        return res.status(200).json({
             error: false,
-            message: 'Candidate deleted correctly'
+            message: 'Candidato eliminado correctamente'
         })
+
     } catch (e) {
         console.log(e.message)
-        res.json({ error: true, message: e.message })
+        return res.json({ error: true, message: e.message })
     }
 }
 

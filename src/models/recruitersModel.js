@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db/connection.js';
 
-const recruitersModel = sequelize.define('recruiters', {
+export const recruitersModel = sequelize.define('recruiters', {
     
     id: {
         type: DataTypes.INTEGER,
@@ -55,5 +55,3 @@ const recruitersModel = sequelize.define('recruiters', {
         updatedAt: true
     }
 )
-
-export default recruitersModel;

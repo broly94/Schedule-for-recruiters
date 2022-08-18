@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db/connection.js";
 
-const technologiesModel = sequelize.define('technologies', {
+export const technologiesModel = sequelize.define('technologies', {
 
     id: {
         type: DataTypes.INTEGER,
@@ -16,6 +16,4 @@ const technologiesModel = sequelize.define('technologies', {
     {
         timestamps: false
     }
-);
-
-export default technologiesModel;
+)

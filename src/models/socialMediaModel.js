@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db/connection.js';
 
-const socialMediaModel = sequelize.define('social_media', {
+export const socialMediaModel = sequelize.define('social_media', {
 
     id: {
         type: DataTypes.INTEGER,
@@ -28,5 +28,3 @@ const socialMediaModel = sequelize.define('social_media', {
     timestamps: false
    }
 )
-
-export default socialMediaModel

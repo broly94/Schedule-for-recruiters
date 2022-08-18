@@ -1,12 +1,8 @@
-import candidatesModel from "./candidatesModel.js";
-import englishLevelModel from "./englishLevelModel.js";
-import senioritiesModel from "./senioritiesModel.js";
-import socialMediaModel from "./socialMediaModel.js";
-import technologiesModel from "./technologiesModel.js";
+import { candidatesModel, englishLevelModel, senioritiesModel, socialMediaModel, technologiesModel } from "./index.js";
 
 //candidates association
 candidatesModel.hasOne(socialMediaModel, { foreignKey: 'candidate_id' });
 candidatesModel.belongsTo(englishLevelModel, { foreignKey: 'english_level_id' });
-candidatesModel.belongsTo(senioritiesModel, { foreignKey: 'seniority_id' }); 
+candidatesModel.belongsTo(senioritiesModel, { foreignKey: 'seniority_id' });
 candidatesModel.belongsToMany(technologiesModel, { through: 'candidatestechnologies' });
 technologiesModel.belongsToMany(candidatesModel, { through: 'candidatestechnologies' });
