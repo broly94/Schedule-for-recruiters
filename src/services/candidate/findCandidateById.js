@@ -3,6 +3,7 @@ import { candidatesModel, socialMediaModel, senioritiesModel, englishLevelModel,
 export const findCandidateById = async (id) => {
 
     try {
+        if(id === null || id === "") return undefined
         return await candidatesModel.findOne({
             where: {
                 id

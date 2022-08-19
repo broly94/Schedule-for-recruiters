@@ -3,8 +3,7 @@ import { recruitersModel } from "../../models"
 export const findAllRecruiters = async () => {
 
     try {
-        const recruiters = await recruitersModel.findAll()    
-        return recruiters
+        return await recruitersModel.findAll()    
     } catch (e) {
         console.log(e.message)
     }

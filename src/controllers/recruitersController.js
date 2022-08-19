@@ -1,20 +1,19 @@
-//Schema model recruiter
 import { recruitersModel } from '../models';
 //import { emailUnique } from '../helpers/recruiter/validationEmail.js';
-import { findAllRecruiters } from '../services/recruiter';
+import { findAllRecruiters, findRecruiterById } from '../services/recruiter';
 
 //Bcrypt
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 const getRecruiters = async (req, res) => {
+    //the email is in the validateToken function - middleware
+    const { email } = req.user
+
     try {
-       
         const recruiters = await findAllRecruiters()
 
-        if (recruiters.length === 0) return res.json({ error: true, message: 'No hay reclutadores' })
-
-        const { email } = req.user;
+        if (recruiters.length === 0) return res.json({ error: true, message: 'No hay registro' })
 
         return res.json({
             error: false,
@@ -28,21 +27,16 @@ const getRecruiters = async (req, res) => {
 }
 
 const getRecruiter = async (req, res) => {
+
+    const { id } = req.params;
+    const { email } = req.user;
+    
     try {
-        const { recruiter_id } = req.params;
-        const recruiter = await recruitersModel.findAll({
-            where: {
-                id: recruiter_id
-            }
-        });
+        const recruiter = await findRecruiterById(id)
 
-        if (recruiter.length == 0) {
-            return res.status(404).json({ error: true, message: 'Error, cloud not get the recruiter' });
-        }
-
-        const { email } = req.user;
-
-        return res.status(200).json({
+        if (recruiter === undefined || recruiter === null) return res.json({ error: true, message: 'No hay registros' })
+    
+        return res.json({
             error: false,
             userLogin: email,
             data: recruiter

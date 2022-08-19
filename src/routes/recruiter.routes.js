@@ -10,7 +10,7 @@ router
     .post(postRecruiter)
     
     router
-    .route('/:recruiter_id')
+    .route('/:id')
     .get(verifyToken, getRecruiter)
     .put(verifyToken, putRecruiter)
     .delete(verifyToken, deleteRecruiter)

@@ -14,7 +14,7 @@ const login = async (req, res) => {
             }
         })
 
-        if (recruiter.length === 0) return res.json({ error: true, message: "El usuario o contraseña no coinciden" });
+        if (recruiter.length === 0) return res.json({ error: true, message: "El usuario o la contraseña no coinciden" });
 
         const data = recruiter.map(e => {
             return {
@@ -27,7 +27,7 @@ const login = async (req, res) => {
         const [dataRecruiter] = data;
 
         const validationPassword = bcrypt.compareSync(password, dataRecruiter.password);
-        if (!validationPassword) return res.json({ error: true, message: "El usuario o contraseña no coinciden" })
+        if (!validationPassword) return res.json({ error: true, message: "El usuario o la contraseña no coinciden" })
 
         const token = jwt.sign({
             email: dataRecruiter.email,

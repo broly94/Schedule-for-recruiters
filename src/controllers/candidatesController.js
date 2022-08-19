@@ -41,9 +41,7 @@ const putCandidate = async (req, res) => {
 
         const candidate = await updateCandidateById(id, requestCandidate)
 
-        if (candidate === undefined) {
-            return res.json({ error: true, message: 'Error al actualizar el candidato' })
-        }
+        if (candidate === undefined) return res.json({ error: true, message: 'Error al actualizar el candidato' })
 
         return res.json({
             erorr: false,
@@ -57,18 +55,12 @@ const putCandidate = async (req, res) => {
 
 const postCandidate = async (req, res) => {
 
-    try {
-        const requestCandidate = req.body
+    const requestCandidate = req.body
 
-        //Create new candidate
+    try {
         const candidate = await createCandidate(requestCandidate)
 
-        if (candidate === undefined) {
-            return res.json({
-                error: true,
-                message: 'No se pudo crear el candidato'
-            })
-        }
+        if (candidate === undefined) return res.json({error: true, message: 'No se pudo crear el candidato' })
 
         return res.json({
             error: false,
