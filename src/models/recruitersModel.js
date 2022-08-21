@@ -25,28 +25,18 @@ export const recruitersModel = sequelize.define('recruiters', {
         validate: {
             isEmail: true
         },
-        unique: true
     },
     password: {
         type: DataTypes.STRING,
-        validate: {
-            notEmpty: true,
-            notNull: true,
-        },
-        allowNull: false
     },
     is_premium: {
         type: DataTypes.BOOLEAN,
-        notEmpty: true,
-        notNull: true,
-        allowNull: false,
     },
-    is_shared: {
-        type: DataTypes.INTEGER,
-        validate: {
-            min: 0,
-            max: 3
-        }
+    is_shared_candidate: {
+        type: DataTypes.BOOLEAN,
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
     }
 },
     {

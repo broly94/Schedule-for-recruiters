@@ -4,8 +4,7 @@ import { updateTechnologies } from "./helpers";
 export const updateCandidateById = async (id, requestCandidate) => {
 
     const { social_media, technologies, ...rest } = requestCandidate
-    console.log(social_media)
-    console.log(technologies)
+
     try {
         //Get the candidate
         const candidate = await candidatesModel.findByPk(id);

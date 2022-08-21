@@ -1,9 +1,14 @@
 
 export const emailUnique = async (model, email) => {
 
+    if (email === undefined || email === "") return undefined
     try {
-        if(email === undefined || email === "") return undefined
-        return await model.findOne({ where: { email } })
+        const data = await model.findOne({ where: { email } })
+        if(data.email === null) {
+            return data.email
+        }else {
+            return null
+        }
     } catch (e) {
         console.log(e.message)
     }

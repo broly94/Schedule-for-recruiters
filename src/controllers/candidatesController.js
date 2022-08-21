@@ -9,7 +9,7 @@ const getCandidates = async (req, res) => {
             return res.json({ error: true, message: 'Error: No existen candidatos' })
         }
 
-        return res.json({ error: false, candidates: candidates })
+        return res.json({ error: false, candidates })
     } catch (e) {
         console.log(e.message)
         return res.json({ error: true, message: e.message })
@@ -23,9 +23,9 @@ const getCandidate = async (req, res) => {
 
         const candidate = await findCandidateById(id)
 
-        if (candidate === null) return res.json({ error: true, message: 'Error el candidato no existe' })
+        if (candidate === undefined || candidate === null) return res.json({ error: true, message: 'Error el candidato no existe' })
 
-        return res.json({ error: false, candidato: candidate })
+        return res.json({ error: false, candidate })
     } catch (e) {
         console.log(e.message)
         return res.json({ error: true, message: e.message })
@@ -41,7 +41,7 @@ const putCandidate = async (req, res) => {
 
         const candidate = await updateCandidateById(id, requestCandidate)
 
-        if (candidate === undefined) return res.json({ error: true, message: 'Error al actualizar el candidato' })
+        if (candidate === undefined || candidate === null) return res.json({ error: true, message: 'Error al actualizar el candidato' })
 
         return res.json({
             erorr: false,
@@ -60,7 +60,7 @@ const postCandidate = async (req, res) => {
     try {
         const candidate = await createCandidate(requestCandidate)
 
-        if (candidate === undefined) return res.json({error: true, message: 'No se pudo crear el candidato' })
+        if (candidate === undefined || candidate === null) return res.json({error: true, message: 'No se pudo crear el candidato' })
 
         return res.json({
             error: false,
@@ -80,7 +80,7 @@ const deleteCandidate = async (req, res) => {
 
         const response = await deleteCandidateById(id)
 
-        console.log(response)
+        if(response === undefined || null) return res.json({ error: true, message: 'No se pudo eliminar el candidato'})
 
         return res.json({
             error: false,
